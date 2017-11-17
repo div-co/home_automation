@@ -69,6 +69,7 @@ $ apt-get install nfs-common portmap locate
 $ sudo apt-get remove --purge x11-common
 $ sudo apt-get --purge autoremove
 ~~~
+See also [U-boot configuration (capes)](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
 
 ### Setup NTP client
 
