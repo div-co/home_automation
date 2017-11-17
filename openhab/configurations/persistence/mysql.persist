@@ -1,0 +1,50 @@
+// Persistence strategies have a name and a definition and are referred to in the "Items" section
+Strategies {
+	everyMinute	: "0 * * * * ?"
+
+	// If no strategy is specified for an item entry below, the default list will be used.
+	default = restoreOnStartup 
+}
+
+/*
+ * Each line in this section defines for which item(s) which strategy(ies) should be applied.
+ * You can list single items, use "*" for all items or "groupitem*" for all members of a group
+ * item (excl. the group item itself).
+ */
+Items {
+	SR_w1_temp_1 : strategy = everyChange, everyUpdate, restoreOnStartup
+	KR_w1_temp_1 : strategy = everyChange, everyUpdate, restoreOnStartup
+	BR_w1_temp_1 : strategy = everyChange, everyUpdate, restoreOnStartup
+	LR_w1_temp_1 : strategy = everyChange, everyUpdate, restoreOnStartup
+	LR_min_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	LR_max_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	KR_max_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	KR_min_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	BR_max_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	BR_min_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	SR_max_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	SR_min_temp : strategy = everyChange, everyUpdate, restoreOnStartup
+	Bath_w1_temp_1 : strategy = everyChange, everyUpdate, restoreOnStartup
+	FAN_Bath : strategy = everyUpdate, everyChange, restoreOnStartup
+	Energy_monitor : strategy = everyChange, restoreOnStartup
+	uptime : strategy = restoreOnStartup
+	Weather_Temperature : strategy = everyChange, everyUpdate
+	LR_Temperature_Manual_Select : strategy = restoreOnStartup, everyUpdate, everyChange
+	Ping_NAS : strategy = everyChange, everyUpdate
+	Ping_Tablet_Elena : strategy = everyChange, everyUpdate
+	Ping_iPhone_DIV : strategy = everyChange, everyUpdate
+	Ping_DELL : strategy = everyChange, everyUpdate
+	Ping_Arduino : strategy = everyChange, everyUpdate
+	Ping_Printer : strategy = everyChange, everyUpdate
+	Relay_IN1 : strategy = everyChange, restoreOnStartup
+	Relay_IN2 : strategy = everyChange, restoreOnStartup
+	Relay_IN3 : strategy = everyChange, restoreOnStartup
+	Honeywell_last_change_to_CLOSED : strategy = everyChange, everyUpdate
+	P9_12_last_change_to_CLOSED : strategy = everyChange, everyUpdate
+	DeDietrich : strategy = everyChange
+	gContact : strategy = everyChange
+	TV_LG : strategy = everyChange
+	Ping_DIVA : strategy = everyChange
+	Honeywell : strategy = everyChange
+	LR_Mode_Selection : strategy = restoreOnStartup, everyUpdate, everyChange
+}

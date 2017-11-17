@@ -1,0 +1,72 @@
+Group	Sensors	"Group - All Sensors"	<wind>
+Group	Temp_Sensors	"Group - All Temperature Sensors"	(Sensors)	
+Group	gContact	"Group - All Contacts"	(Sensors)	
+Group	gRelays	"Group - All Relays"
+Group	All_Rooms	"Group - All Rooms"	<house>
+Group	gBR	"Group - Bed Room"	<bedroom>	(All_Rooms)	
+Group	gKR	"Group - Kids Room"	<bath>	(All_Rooms)	
+Group	gLR	"Grpoup - Living Room"	<sofa>	(All_Rooms)	
+Group	gBath	"Group - Bath"	(All_Rooms)	
+Group	Charts	"Group - Charts"	<pie>
+Group	System	"Group - System"
+Group	IP_devices	"Group - IP Devices"
+Group	Multimedia	"Group - Multimedia"	<video>
+Group	All_Devices	"Group - All Devices"
+Group	All_Lights	"All Lights"	<switch>
+DateTime	LR_w1_temp_1_LastUpdate	"Last Update [%1$ta %1$tR]"	<clock>
+DateTime	Date	"Date [%1$ta %1$tR]"	<calendar>	{ ntpq="Europe/Sofia:bg_BG" }
+Number	Weather_Temperature	"Outside Temp [%.1f]"	<temperature>	{ http="<[http://weather.yahooapis.com/forecastrss?w=638242&u=c:60000:XSLT(yahoo_weather_temperature.xsl)]" }
+Number	KR_w1_temp_1	"Kids' Room t° [%.1f °]"	<temperature>	(Sensors,Temp_Sensors,gKR)		{ onewire="28.FFA758201400#temperature" }
+Number	BR_w1_temp_1	"Bed Room t° [%.1f °]"	<temperature>	(gBR,Temp_Sensors,Sensors)		{ onewire="28.FF7D68201400#temperature" }
+Number	LR_w1_temp_1	"Living Room t° [%.1f °]"	<temperature>	(Sensors,Temp_Sensors,gLR)		{ onewire="28.FF1867201400#temperature" }
+Number	SR_w1_temp_1	"Service Room t° [%.1f °]"	<temperature>	(Sensors,Temp_Sensors)		{ onewire="28.FF2538201400#temperature" }
+Number	Bath_w1_temp_1	"Bath Room t° [%.1f °]"	<temperature>	(Temp_Sensors,gBath)		{ onewire="28.FFA933201400#temperature" }
+Number	LR_max_temp	"Living Room Max Temperature [%.1f °]"	<temperature>
+Number	LR_min_temp	"Living Room Min Temperature [%.1f °]"	<temperature>
+Number	KR_max_temp	"Kids Room Temp Sensor Max [%.1f]"	<temperature>
+Number	KR_min_temp	"Kids Room Temperature Sensor Min"	<temperature>
+Number	BR_max_temp	"Bed Room Sensor 1 Max [%.1f]"	<temperature>
+Number	BR_min_temp	"Bed Room Temp Max [%.1f]"	<temperature>
+Number	SR_max_temp	"Bed Room Sensor 1 Max [%.1f]"	<temperature>
+Number	SR_min_temp	"Bed Room Temp Max [%.1f]"	<temperature>
+Number	KR_w1_temp_1_Period	"Chart Period Variable"
+Number	LR_w1_temp_1_Period	"Chart Period Variable"
+Number	BR_w1_temp_1_Period	"Chart Period Variable"
+Number	SR_w1_temp_1_Period	"Chart Period Variable"
+Number	ALL_temperature_sensors_Period	"Chart Period Variable"
+Number	Energy_monitor	"Energy consumption"	<energy>	{ openenergymonitor="realPower" }
+Number	Current_voltage	"Energy monitor - VOLTAGE [%d V]"	<energy>	{ openenergymonitor="voltage" }
+String	uptimeFormatted	"Update formatted [%s]"	(System)		{ systeminfo="UptimeFormatted:5000" }
+String	OpenhabUptimeFormatted	"Uptime form. [%s]"	(System)		{ systeminfo="ProcessUptimeFormatted:5000:$$" }
+Number	MemFreePercent	"Mem free [%.1f%%]"	(System)		{ systeminfo="MemFreePercent:5000" }
+Number	DirUsage	"Dir usage [%.1f]"	(System)		{ systeminfo="DirUsage:5000:/opt/openhab/logs" }
+Number	loadAverage1min	"Load avg. 1min [%.1f]"	(System)		{ systeminfo="LoadAverage1Min:5000" }
+Number	loadAverage5min	"Load avg. 5min [%.1f]"	(System)		{ systeminfo="LoadAverage5Min:5000" }
+Number	loadAverage15min	"Load avg. 15min [%.1f]"	(System)		{ systeminfo="LoadAverage15Min:5000" }
+Switch	Ping_NAS	"ZyXel NAS"	<network>	(IP_devices,All_Devices)		{ nh="192.168.50.5" }
+Switch	Ping_Tablet_Elena	"Tablet"	<network>	(IP_devices,All_Devices)		{ nh="192.168.50.11" }
+Switch	Ping_iPhone_DIV	"iPhone"	<network>	(IP_devices,All_Devices)		{ nh="192.168.50.13" }
+Switch	Ping_DELL	"DELL"	<network>	(IP_devices,All_Devices)		{ nh="192.168.50.10" }
+Switch	Ping_Arduino	"Arduino"	<network>	(System,IP_devices,All_Devices)		{ nh="192.168.50.6" }
+Switch	Ping_Printer	"Printer"	<network>	(IP_devices,All_Devices)		{ nh="192.168.50.2" }
+Switch	Ping_DIVA	"HD Player"	<video>	(IP_devices,Multimedia,All_Devices)		{ nh="192.168.50.3" }
+Switch	TV_LG	"LG TV"	<tv>	(IP_devices,Multimedia,All_Devices)		{ nh="192.168.50.8" }
+Switch	FAN_Bath	"Bathroom Fan [%d]"
+Number	LR_Temperature_Manual_Select	"Set [%.1f]"	<temperature>	(gLR)	
+Contact	Honeywell	"Honeywell"	<fire>	(gLR,All_Devices)		{ gpio="pin:61" }
+Number	LR_Mode_Selection	"Mode selector"
+Switch	DeDietrich	"DeDietrich"	(gRelays)	
+Switch	Relay_IN1	"GPIO_44"	(gRelays)		{ gpio="pin:44 activelow:yes" }
+Switch	Relay_IN2	"GPIO_26"	(gRelays)		{ gpio="pin:26 activelow:yes" }
+Switch	Relay_IN3	"GPIO_46"	(gRelays)		{ gpio="pin:46 activelow:yes" }
+Switch	Relay_IN4	"GPIO_65"	(gRelays)		{ gpio="pin:65 activelow:yes" }
+Switch	Bath_light	""
+Switch	Bath_light_mirr	""
+Contact	GPIO_IN_Contact	""	<switch>	{ gpio="pin:60 activelow:no debounce:5" }
+Switch	REBOOT_BBB	"Restart Beaglebone"	<shield>	{ nh="localhost", exec="OFF:reboot" }
+Switch	REBOOT_HAB	"Restart HAB demon"	<shield>	{ nh="localhost", exec="OFF:service openhab restart" }
+Number	Honeywell_count_changes_to_CLOSED	" [%d]"
+DateTime	Honeywell_last_change_to_CLOSED	"Last change (Honeywell) [%1$ta %1$tT]"	<clock>
+Number	P9_12_count_changes_to_CLOSED	" [%d]"
+DateTime	P9_12_last_change_to_CLOSED	"Last change (P9_12) [%1$ta %1$tT]"	<clock>
+Switch	Initalise_variables	"Initialize variables [%d]"

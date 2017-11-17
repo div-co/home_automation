@@ -1,0 +1,148 @@
+import org.openhab.core.library.types.*
+import org.openhab.core.persistence.*
+import org.openhab.model.script.actions.*
+
+rule "Initialize states of variables"
+	when
+		Item Initalise_variables received command or
+		System started
+	then 
+		//logInfo("INIT_RULE", "--------- STARTED ---------- Initialize states of variables ---------")
+		postUpdate(LR_w1_temp_1_Period, 2)
+		postUpdate(BR_w1_temp_1_Period, 2)
+		postUpdate(KR_w1_temp_1_Period, 2)
+		//postUpdate(Bath_w1_temp_1_Period, 1)
+		postUpdate(ALL_temperature_sensors_Period, 1)
+		postUpdate(Honeywell_count_changes_to_CLOSED, 0)
+		postUpdate(P9_12_count_changes_to_CLOSED, 0)
+		sendCommand(Relay_IN1, OFF)
+		sendCommand(Relay_IN2, OFF)
+		sendCommand(Relay_IN3, OFF)
+		sendCommand(Relay_IN4, OFF)
+		//logInfo("INIT_RULE", "--------- FINISHED --------- Initialize states of variables ---------")
+end
+
+
+/*
+ * Update Min / Max temperatures for DS18B20
+ * */
+rule "Update MAX and MIN temperatures"
+	when
+		Item Weather_Temperature changed or
+		Time cron "0 0 0 * * ?" or
+		System started
+	then	
+		postUpdate(LR_max_temp, LR_w1_temp_1.maximumSince(now.toDateMidnight).state)
+		postUpdate(LR_min_temp, LR_w1_temp_1.minimumSince(now.toDateMidnight).state)
+		postUpdate(BR_max_temp, BR_w1_temp_1.maximumSince(now.toDateMidnight).state)
+		postUpdate(BR_min_temp, BR_w1_temp_1.minimumSince(now.toDateMidnight).state)
+		postUpdate(KR_max_temp, KR_w1_temp_1.maximumSince(now.toDateMidnight).state)
+		postUpdate(KR_min_temp, KR_w1_temp_1.minimumSince(now.toDateMidnight).state)
+		postUpdate(SR_max_temp, KR_w1_temp_1.maximumSince(now.toDateMidnight).state)
+		postUpdate(SR_min_temp, KR_w1_temp_1.minimumSince(now.toDateMidnight).state)
+end
+
+
+/*
+ *  Creates an item that stores the last update time of this item
+ * */
+rule "Record last LR temperature update time"
+	when
+	  Item LR_w1_temp_1 received update
+	then
+	  postUpdate(LR_w1_temp_1_LastUpdate, new DateTimeType())
+end
+
+
+/*
+ * Control the state of LR temperature from open hab
+ */
+rule "Select LR Heating Mode and Temperature"
+	when
+		Item LR_Mode_Selection changed or
+		Item Honeywell changed or
+		Item LR_Temperature_Manual_Select changed or
+		Item LR_w1_temp_1 received updated or
+		System started
+	then
+		//logInfo("HEATING_MODE", "--------- STARTED ---------- Select LR Heating Mode and Temperature ---------")
+		
+		val LR_temp_value = LR_w1_temp_1.state /*as DecimalType*/
+		val LR_manual_temp = LR_Temperature_Manual_Select.state /*as DecimalType*/
+		val LR_temp_sw_state = LR_Mode_Selection.state /*as DecimalType*/
+		
+		switch (LR_temp_sw_state){
+		/*
+		 * MANUAL
+		 * manual mode defined by openhab
+		 * DeDietrich_input_state is being controlled by selecting LR_Temperature_Manual_Select value
+		 **/
+			case 1 : {
+				if(LR_manual_temp > LR_temp_value) {
+					sendCommand(DeDietrich, ON)
+				} 
+				else {
+					sendCommand(DeDietrich, OFF)
+				}
+			}
+	
+		/*
+		 * AUTO
+		 * DeDietrich is being controlled by Honeywell controller
+		 * */ 
+			default : {
+				if(Honeywell.state == CLOSED && DeDietrich.state == OFF) {
+					sendCommand(DeDietrich, ON)
+				}
+				else if (Honeywell.state == OPEN && DeDietrich.state == ON){
+					sendCommand(DeDietrich, OFF)	
+				}
+				
+			}	
+		}
+		
+		//logInfo("HEATING_MODE", "--------- FINISHED --------- Select LR Heating Mode and Temperature ---------")
+end
+
+/*
+ * Cont contact state changes to CLOSED
+ */
+rule "Update P8_26 Honeywell state"
+when
+	Item Honeywell changed to CLOSED
+then
+	//logInfo("HONEYWELL_CLOSED", "--------- STARTED ---------- Update P8_26 Honeywell state ---------")
+	
+	val count = Honeywell_count_changes_to_CLOSED.state as DecimalType
+
+	if(Honeywell.state == CLOSED){
+		count = count +1
+		postUpdate(Honeywell_count_changes_to_CLOSED, count)
+		postUpdate(Honeywell_last_change_to_CLOSED, new DateTimeType())
+	}
+	//logInfo("HONEYWELL_CLOSED", "--------- FINISHED --------- Update P8_26 Honeywell state ---------")
+end
+
+rule "Update P9_12 GPIO_IN_Contact state"
+when
+	Item GPIO_IN_Contact changed
+then
+	//logInfo("P9_12_CLOSED", "--------- STARTED ---------- Update P9_12 GPIO_IN_Contact state ---------")
+
+	val count = P9_12_count_changes_to_CLOSED.state as DecimalType
+
+	if(GPIO_IN_Contact.state == CLOSED){
+		count = count + 1
+		postUpdate(P9_12_count_changes_to_CLOSED, count)
+		postUpdate(P9_12_last_change_to_CLOSED, new DateTimeType())
+		
+		sendCommand(Relay_IN4, ON)
+	} else {
+		sendCommand(Relay_IN4, OFF)
+	}
+	
+	//logInfo("P9_12_CLOSED", "--------- FINISHED --------- Update P9_12 GPIO_IN_Contact state ---------")
+end
+
+
+

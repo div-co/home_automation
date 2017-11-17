@@ -1,0 +1,206 @@
+sitemap ap8 label="Home"
+{
+	Frame label="Rooms" icon="house" {
+		Text item=LR_w1_temp_1 label="Living Room [%.1f °]" icon="sofa" {
+			Frame label="Living Room Temperature" {
+				Text item=LR_w1_temp_1 label="Details [%.1f °]" icon="chart" {
+					Frame label="Heating" {
+						Text item=DeDietrich label="DeDietrich [%S]" icon="fire"						
+						Text item=Honeywell label="Honeywell [%S]" icon="fire"						
+						Text item=Honeywell_count_changes_to_CLOSED label="Changed to CLOSED [%d times]" icon="colorwheel"						
+						Text item=Honeywell_last_change_to_CLOSED label="Last change [%1$ta %1$tR]" icon="clock"						
+					}					
+					Frame label="Living Room Temperature" {
+						Text item=LR_max_temp label="Max [%.1f °]" icon="thermometer-high"						
+						Text item=LR_min_temp label="Min [%.1f °]" icon="thermometer"						
+					}					
+					Frame label="Statistic" {
+						Switch item=LR_w1_temp_1_Period label="Select Period" icon="system-monitor-24" mappings=[0="H", 1="D", 2="W", 3="M"]						
+						Chart item=LR_w1_temp_1 label="Living Room Temperature - Month [%.1f]" icon="pie" period=M visibility=[LR_w1_temp_1_Period==3]						
+						Chart item=LR_w1_temp_1 label="Living Room Temperature - Week [%.1f]" icon="pie" period=W visibility=[LR_w1_temp_1_Period==2]						
+						Chart item=LR_w1_temp_1 label="Living Room Temperature - Day [%.1f]" icon="pie" period=D visibility=[LR_w1_temp_1_Period==1]						
+						Chart item=LR_w1_temp_1 label="Living Room Temperature - Hour [%.1f]" icon="pie" period=h visibility=[LR_w1_temp_1_Period==0]						
+					}					
+					Frame {
+						Text item=LR_w1_temp_1_LastUpdate label="Last Update [%1$tR]" icon="clock"						
+					}					
+				}				
+				Switch item=LR_Mode_Selection label="Mode" icon="climate" mappings=[0="AUTO", 1="MANUAL"]				
+				Setpoint item=LR_Temperature_Manual_Select label="Manual set [%.1f °]" icon="heating" minValue=5 maxValue=29 step=0.1 visibility=[LR_Mode_Selection==1]				
+			}			
+			Frame label="Lights" {
+				Colorpicker label="Collorpicker" icon="colorwheel"				
+				Text label="Light" icon="slider"				
+			}			
+			Frame label="Multimedia" {
+				Text item=Ping_DIVA label="HD Player [%S]" icon="tv"				
+			}			
+		}		
+		Text item=BR_w1_temp_1 label="Bed Room [%.1f °]" icon="bedroom" {
+			Frame label="Bed Room Temperature" {
+				Text item=BR_w1_temp_1 label="Details [%.1f °]" icon="temperature" {
+					Frame label="Bed Room Temperature" {
+						Text item=BR_max_temp label="Max [%.1f °]" icon="thermometer-high"						
+						Text item=BR_min_temp label="Min [%.1f °]" icon="thermometer"						
+					}					
+					Frame label="Statistic" {
+						Switch item=BR_w1_temp_1_Period label="Select Period" icon="system-monitor-24" mappings=[0="H", 1="D", 2="W", 3="M"]						
+						Chart item=BR_w1_temp_1 label="Bed Room Temperature - Month [%.1f]" icon="pie" period=M visibility=[BR_w1_temp_1_Period==3]						
+						Chart item=BR_w1_temp_1 label="Bed Room Temperature - Week [%.1f]" icon="pie" period=W visibility=[BR_w1_temp_1_Period==2]						
+						Chart item=BR_w1_temp_1 label="Bed Room Temperature - Day [%.1f]" icon="pie" period=D visibility=[BR_w1_temp_1_Period==1]						
+						Chart item=BR_w1_temp_1 label="Bed Room Temperature - Hour [%.1f]" icon="pie" period=h visibility=[BR_w1_temp_1_Period==0]						
+					}					
+				}				
+			}			
+		}		
+		Text item=KR_w1_temp_1 label="Kids Room [%.1f °]" icon="bath" {
+			Frame label="Kids Room Temperature" {
+				Text label="Details" icon="chart" {
+					Frame label="Kids Room Temperature" {
+						Text item=KR_w1_temp_1 label="Current [%.1f °]"						
+					}					
+					Frame label="Range" {
+						Text item=KR_max_temp label="Max [%.1f °]" icon="thermometer-high"						
+						Text item=KR_min_temp label="Min [%.1f °]" icon="thermometer"						
+					}					
+					Frame label="Statistic" {
+						Switch item=KR_w1_temp_1_Period label="Select Period" icon="system-monitor-24" mappings=[0="H", 1="D", 2="W", 3="M"]						
+						Chart item=KR_w1_temp_1 label="Kids Room Temperature - Month [%.1f]" icon="pie" period=M visibility=[KR_w1_temp_1_Period==3]						
+						Chart item=KR_w1_temp_1 label="Kids Room Temperature - Week [%.1f]" icon="pie" period=W visibility=[KR_w1_temp_1_Period==2]						
+						Chart item=KR_w1_temp_1 label="Kids Room Temperature - Day [%.1f]" icon="pie" period=D visibility=[KR_w1_temp_1_Period==1]						
+						Chart item=KR_w1_temp_1 label="Kids Room Temperature - Hour [%.1f]" icon="pie" period=h visibility=[KR_w1_temp_1_Period==0]						
+					}					
+				}				
+			}			
+			Frame label="Devices" {
+				Text item=TV_LG label="LG TV [%S]" icon="tv"				
+				Text item=Ping_Tablet_Elena label="Tablet [%S]" icon="network"				
+			}			
+		}		
+		Text item=Bath_w1_temp_1 label="Bath [%.1f °]" icon="bath_2" {
+			Frame label="Lights & Ventilation" {
+				Switch item=FAN_Bath label="Fan" icon="fan"				
+				Switch item=Bath_light label="Lights" icon="light"				
+				Switch item=Bath_light_mirr label="Mirror" icon="light"				
+			}			
+			Frame label="Temperature & Humidity" {
+				Text item=Bath_w1_temp_1 label="Temperature [%.1f °]" icon="temperature"				
+				Text item=DeDietrich				
+				Text label="Humidity" icon="climate"				
+			}			
+		}		
+	}	
+	Frame label="Weather" {
+		Text item=Weather_Temperature label="Outside Temp. [%.1f °]" icon="sun_clouds"		
+	}	
+	Frame label="System" {
+		Text item=Current_voltage label="Energy [%d V]" icon="energy" {
+			Frame label="Power supply" {
+				Text item=Current_voltage label="Voltage [%d V]" icon="energy"				
+				Text item=Energy_monitor label="Energy Cons. [%d kW]" icon="energy"				
+			}			
+			Frame item=DeDietrich label="Heting" icon="fire" {
+				Text item=DeDietrich label="DeDietrich [%S]" icon="fire"				
+				Text item=Honeywell label="Honeywell [%S]" icon="heating"				
+			}			
+			Frame label="Temperature statistic" {
+				Text label="Chart" icon="temperature" {
+					Switch item=ALL_temperature_sensors_Period label="Period" icon="system-monitor-24" mappings=[0="H", 1="D", 2="W", 3="M", 4="Y"]					
+					Chart item=Temp_Sensors label="All t° sensors - Year [%.1f]" icon="temperature" period=Y visibility=[SR_w1_temp_1_Period==4]					
+					Chart item=Temp_Sensors label="All t° sensors - Month [%.1f]" icon="temperature" period=M visibility=[SR_w1_temp_1_Period==3]					
+					Chart item=Temp_Sensors label="All t° sensors - Week [%.1f]" icon="temperature" period=W visibility=[SR_w1_temp_1_Period==2]					
+					Chart item=Temp_Sensors label="All t° sensors - Day [%.1f]" icon="temperature" period=D visibility=[SR_w1_temp_1_Period==1]					
+					Chart item=Temp_Sensors label="All t° sensors - Hour [%.1f]" icon="temperature" period=h visibility=[SR_w1_temp_1_Period==0]					
+				}				
+			}			
+		}		
+		Text item=SR_w1_temp_1 label="Status [%.1f °]" icon="settings-on" {
+			Frame label="Home devices" {
+				Text label="Mobile devices" icon="network" {
+					Frame label="Presence" {
+						Text item=Ping_Tablet_Elena label="Tablet [%S]" icon="network"						
+						Text item=Ping_iPhone_DIV label="iPhone [%S]" icon="network"						
+						Text item=Ping_DELL label="DELL [%S]" icon="network"						
+					}					
+				}				
+				Text label="Multimedia" icon="tv-on" {
+					Frame {
+						Text item=TV_LG label="TV LG [%S]" icon="tv"						
+						Text item=Ping_DIVA label="HD Player [%S]" icon="video"						
+					}					
+				}				
+				Text label="Appliances" icon="kitchen" {
+					Frame {
+						Text item=Ping_Printer label="Printer [%S]" icon="network"						
+						Text item=Honeywell label="Honeywell [%S]" icon="fire"						
+					}					
+				}				
+				Group item=All_Devices label="All Devices [%S]" icon="switch" {
+					Text item=Ping_NAS					
+					Text item=Ping_Tablet_Elena label="Tablet [%S]"					
+					Text item=Ping_iPhone_DIV					
+					Text item=Ping_DELL					
+					Text item=Ping_Arduino					
+					Text item=Ping_Printer					
+					Text item=Ping_DIVA					
+					Text item=TV_LG					
+					Text item=Honeywell label="Honeywell [%S]" icon="fire"					
+					Text item=DeDietrich label="DeDietrich [%S]"					
+				}				
+			}			
+			Frame label="System Devices" {
+				Text item=Ping_NAS label="ZyXel NAS [%S]" icon="nas"				
+				Text item=Ping_Arduino label="Arduino [%S]" icon="network"				
+			}			
+			Frame label="System info" {
+				Text item=SR_w1_temp_1 label="Service Room [%.1f °]" icon="control-panel" {
+					Frame label="Temperature statistic" {
+						Switch item=SR_w1_temp_1_Period label="Period" icon="system-monitor-24" mappings=[0="H", 1="D", 2="W", 3="M"]						
+						Chart item=SR_w1_temp_1 label="Service Room Temperature - Month [%.1f]" icon="pie" period=M visibility=[SR_w1_temp_1_Period==3]						
+						Chart item=SR_w1_temp_1 label="Service Room Temperature - Week [%.1f]" icon="pie" period=W visibility=[SR_w1_temp_1_Period==2]						
+						Chart item=SR_w1_temp_1 label="Service Room Temperature - Day [%.1f]" icon="pie" period=D visibility=[SR_w1_temp_1_Period==1]						
+						Chart item=SR_w1_temp_1 label="Service Room Temperature - Hour [%.1f]" icon="pie" period=h visibility=[SR_w1_temp_1_Period==0]						
+					}					
+				}				
+				Text label="Runtime status" icon="runtime" {
+					Frame label="openHAB" {
+						Text item=OpenhabUptimeFormatted label="openHAB Uptime [%s]" icon="system-monitor-24"						
+						Text item=DirUsage label="Logs size [%.1f MB]" icon="system-monitor-24"						
+						Text label="Restart HAB" icon="siren" {
+							Switch item=REBOOT_HAB label="openHAB" icon="siren" mappings=[OFF="Restart"]							
+						}						
+						Switch item=Initalise_variables label="Initialize variables" icon="siren" mappings=[ON="Init"]						
+					}					
+					Frame label="Beaglebone" {
+						Text item=uptimeFormatted label="Sytem Uptime [%s]" icon="system-monitor-24"						
+						Text item=MemFreePercent label="Mem free [%.1f %%]" icon="system-monitor-24"						
+						Text item=loadAverage5min label="Average load 5m [%.1f]" icon="system-monitor-24"						
+						Text item=loadAverage15min label="Average load 15m [%.1f]" icon="system-monitor-24"						
+						Text item=loadAverage1min label="Average load 1m [%.1f]" icon="system-monitor-24"						
+						Text label="Reboot BBB" icon="siren" {
+							Switch item=REBOOT_BBB label="Host" icon="siren" mappings=[OFF="Reboot"]							
+						}						
+					}					
+				}				
+			}			
+		}		
+	}	
+	Frame label="Futured" {
+		Text item=gContact label="Test items" icon="switch" {
+			Frame label="P9_12" {
+				Text item=GPIO_IN_Contact label="P9_12_state [%S]"				
+				Text item=P9_12_count_changes_to_CLOSED label="P9_12 CLOSED [%d times]" icon="pie" //visibility=[P9_12_count_changes_to_CLOSED>0]				
+				Text item=P9_12_last_change_to_CLOSED label="Last change [%1$ta %1$tT]" icon="clock"				
+			}			
+			Frame label="Relays" {
+				Switch item=Relay_IN4 label="Relay4 [%S]"				
+				Switch item=Relay_IN3 label="Relay3 [%S]"				
+				Switch item=Relay_IN2 label="Relay2 [%S]"				
+				Switch item=Relay_IN1 label="Relay1 [%S]"				
+			}			
+			Frame label="System" {
+				Switch item=Initalise_variables label="Initialize variables" icon="siren" mappings=[ON="Init"]				
+			}			
+		}		
+	}	
+}
