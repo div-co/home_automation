@@ -1,8 +1,8 @@
 # Install MySQL
-
-    #apt-get update
-    #apt-get install mysql-client mysql-server
-
+~~~
+$ apt-get update
+$ apt-get install mysql-client mysql-server
+~~~
 ### Create openhab database
 ~~~
 $ mysql -p
@@ -26,17 +26,14 @@ mysqldump --opt -u root -p openhab > /<backup_location>/$currentDate.openhab.sql
 
 ### Restore tables
 ~~~
-mysql> CREATE DATABASE tempdatabase;
+$ mysql> CREATE DATABASE tempdatabase;
+$ mysql -p tempdatabase < /mnt/nfs/mysql/<backupName>.sql  
+$ mysql> show databases;
+$ mysql> use openhab;
+$ mysql> select * from Items;
+$ mysql> select * from tempdatabase.Items;
 
-# mysql -p tempdatabase < /mnt/nfs/mysql/<backupName>.sql
-    
-mysql> show databases;
-mysql> use openhab;
-mysql> select * from Items;
-mysql> select * from tempdatabase.Items;
-
-##### Use INSERT IGNORE to avoid duplicate entry
-
-mysql> INSERT INTO openhab.Item# (Time, Value) SELECT Time, Value FROM tempdatabase.Item#; 
-mysql> drop database tempdatabase;
+# Use INSERT IGNORE to avoid duplicate entry.
+$ mysql> INSERT INTO openhab.Item# (Time, Value) SELECT Time, Value FROM tempdatabase.Item#; 
+$ mysql> drop database tempdatabase;
 ~~~
