@@ -3,10 +3,9 @@
 
 My home automation project includes the following steps
 
-1. Temperature monitoring and control (w1)
-2. Lights control (z-wave)
-3. Home devices monitoring
-4. Platform extension (messaging, arduino, esp)
+1. Temperature monitoring (onewire) and control
+2. Appliances & Lights control
+3. Monitoring
 
 ### Hardware
 
@@ -22,7 +21,7 @@ My home automation project includes the following steps
 - Oracle Java (for ARM)
 - MySQL
 - [openHAB](https://github.com/div-co/home_automation/tree/master/openhab), HABmin
-- OWFS
+- Owserver / OWFS
 - SIGAR (provide [System Info](https://github.com/div-co/home_automation/tree/master/debian/systeminfo)rmation)
 - [Mosquitto](https://github.com/div-co/home_automation/blob/master/debian/mqtt/mosquitto.md) (MQTT Broker)
-- Openenergymonitor
+- Openenergy Monitor
