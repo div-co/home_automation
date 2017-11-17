@@ -10,8 +10,7 @@ My home automation project includes the following steps
 
 ### Hardware
 
-- BeagleBone Black rev. C
-- BeagleBone Black IND 4G
+- BeagleBone Black (rev. C + IND 4G) [install](https://github.com/div-co/home_automation/tree/master/beaglebone#install--reinstall-beaglebone) | [U-boot (capes)](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
 - Z-Wave (Aeon z-stick S2, TKB TZ46)
 - [Arduino](https://github.com/div-co/home_automation/tree/master/arduino/readme.md) NANO + Ethernet
 - 1-Wire sensors
