@@ -89,3 +89,8 @@ To see or change what timezone your Debian system is configured for
 ~~~
 dpkg-reconfigure tzdata
 ~~~
+
+### Other packages and tools
+- [samba](https://github.com/div-co/home_automation/tree/master/debian/Samba)
+- [java](https://github.com/div-co/home_automation/tree/master/debian/java)
+- [mysql](https://github.com/div-co/home_automation/blob/master/debian/mysql)
