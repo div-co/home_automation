@@ -10,7 +10,7 @@ default Debian username:password is [debian:temppwd]
 ### Change the hostname
 ~~~
 $ vi /etc/hosts
-$ hostname myhab			
+$ vi /etc/hostname		
 ~~~
 
 ### Configure Network Adapter (eth0)
@@ -45,20 +45,6 @@ $ vi /etc/profile
 $ source /etc/profile
 ~~~
 
-### Mount NFS storages
-
-~~~
-$ cd /mnt/
-$ mkdir /mnt/nfs
-$ mkdir logs
-$ mkdir backup
-$ vi /etc/fstab
-	NFS_SERVER:/NFS_SHARE/src /mnt/nfs/src nfs rw,sync,hard,intr  0  0
-	NFS_SERVER:/NFS_SHARE/logs /mnt/nfs/logs nfs rw,sync,hard,intr  0  0
-	NFS_SERVER:/NFS_SHARE/backup /mnt/nfs/backup nfs rw,sync,hard,intr  0  0
-$ mount -a
-~~~
-
 ### Packages
 
 ~~~
@@ -70,6 +56,21 @@ $ sudo apt-get remove --purge x11-common
 $ sudo apt-get --purge autoremove
 ~~~
 See also [U-boot configuration (capes)](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
+
+### Mount NFS storages
+
+~~~
+$ cd /mnt/
+$ mkdir -p /mnt/nfs/src
+$ mkdir -p /mnt/nfs/logs
+$ mkdir -p /mnt/nfs/backup
+$ mkdir backup
+$ vi /etc/fstab
+	NFS_SERVER:/NFS_SHARE/src /mnt/nfs/src nfs rw,sync,hard,intr  0  0
+	NFS_SERVER:/NFS_SHARE/logs /mnt/nfs/logs nfs rw,sync,hard,intr  0  0
+	NFS_SERVER:/NFS_SHARE/backup /mnt/nfs/backup nfs rw,sync,hard,intr  0  0
+$ mount -a
+~~~
 
 ### Setup NTP client
 
