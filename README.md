@@ -25,5 +25,5 @@ My home automation project includes the following steps
 - [openHAB](/openhab/README.md), HABmin
 - OWFS
 - SIGAR (provide System Information)
-- Mosquitto (MQTT Broker)
+- [Mosquitto](/mqtt/README.md) (MQTT Broker)
 - Openenergymonitor
