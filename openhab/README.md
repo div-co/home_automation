@@ -4,6 +4,7 @@
 
 ~~~
 $ ls /sys/bus/w1/devices
+$ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 ~~~
 
 ### GPIO
