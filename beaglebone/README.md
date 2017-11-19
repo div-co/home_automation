@@ -56,9 +56,10 @@ vi /etc/default/capemgr
 $ reboot
 ~~~
 
-### Check pinmux configuration again
+### Check cape/pinmux configuration again
 ~~~
-cat /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
+$ dmesg -c
+$ cat /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
 ~~~
 
 ### Expansion Voltages
