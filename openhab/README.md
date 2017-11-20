@@ -12,6 +12,9 @@ $ rm /opt/openhab2/*.bat
 ~~~
 $ apt-get install default-jre
 ~~~
+### GPIO
+
+[Configure gpio pins](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
 
 ### OneWire
 
@@ -21,9 +24,8 @@ $ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 ~~~
 Install and configure [owserver](https://github.com/div-co/home_automation/tree/master/debian/owfs)
 
-### GPIO
-
-[Configure gpio pins](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
+### Z-Wave
+[Configure](https://github.com/div-co/home_automation/blob/master/openhab/zwave.md)
 
 ### Resources (custom installation)
 
