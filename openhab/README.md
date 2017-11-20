@@ -3,6 +3,10 @@
 - [Prerequisites](http://docs.openhab.org/installation/index.html#prerequisites)
 - [Manual installation](http://docs.openhab.org/installation/linux.html#manual-installation).
 
+~~~
+$ rm /opt/openhab2/*.bat
+~~~
+
 ### Java
 
 ~~~

@@ -37,12 +37,12 @@ $ vi /etc/resolv.conf
 
 ### Create alias `ll`
 ~~~
-$ vi /etc/profile
+$ vi ~/.profile
 	...
 	alias ll='ls $LS_OPTIONS -l'
 	alias l='ls $LS_OPTIONS -lA'
 	...
-$ source /etc/profile
+$ source ~/.profile
 ~~~
 
 ### Packages
