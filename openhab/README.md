@@ -30,8 +30,5 @@ $ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 | rrd4j databases | /opt/openhab2/userdata |  |
 | Site configuration | /opt/openhab2/conf | sitemap, items, things, etc. |
 | Service | /usr/lib/systemd/system/openhab2.service |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
 | add-on files | /usr/share/openhab2/addons |  |
 | openHAB application | /opt/openhab2 |  |
