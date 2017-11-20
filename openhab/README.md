@@ -1,5 +1,14 @@
 # OpenHab2 Setup
 
+- [Prerequisites](http://docs.openhab.org/installation/index.html#prerequisites)
+- [Manual installation](http://docs.openhab.org/installation/linux.html#manual-installation).
+
+### Java
+
+~~~
+$ apt-get install default-jre
+~~~
+
 ### OneWire
 
 ~~~
@@ -9,9 +18,6 @@ $ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 
 ### GPIO
 
-~~~
-
-~~~
 
 ### Resources (custom installation)
 
