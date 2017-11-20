@@ -15,9 +15,11 @@ $ apt-get install default-jre
 $ ls /sys/bus/w1/devices
 $ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 ~~~
+Install and configure [owserver](https://github.com/div-co/home_automation/tree/master/debian/owfs)
 
 ### GPIO
 
+[Configure gpio pins](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
 
 ### Resources (custom installation)
 
