@@ -8,10 +8,13 @@ $ vi /etc/owfs.conf
 ~~~
 owfs.conf
 ~~~
-	...
-	server: server = 192.168.7.2:53131
+	! server: server = localhost:4304
+	#mountpoint = /mnt/1wire
+	allow_other
+	http: port = 2121
+	ftp: port = 2120
+	#server: port = 127.0.0.1:4304
 	server: w1
-	...
 ~~~
 In case of Owserver port issue change Cloud9 port    	
 ~~~   	
