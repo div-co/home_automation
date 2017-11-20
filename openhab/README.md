@@ -37,6 +37,6 @@ Install and configure [owserver](https://github.com/div-co/home_automation/tree/
 | Service configuration | /opt/openhab2/openhab2 | Ex: change http/https port<br>OPENHAB_HTTP_PORT=1080<br>OPENHAB_HTTPS_PORT=50443 |
 | rrd4j databases | /opt/openhab2/userdata |  |
 | Site configuration | /opt/openhab2/conf | sitemap, items, things, etc. |
-| Service | /usr/lib/systemd/system/openhab2.service |  |
+| Service | /lib/systemd/system/openhab2.service |  |
 | add-on files | /usr/share/openhab2/addons |  |
 | openHAB application | /opt/openhab2 |  |
