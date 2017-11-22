@@ -1,6 +1,6 @@
 # OpenHab2 Setup
 
-- [Prerequisites](http://docs.openhab.org/installation/index.html#prerequisites)
+## Step 1 [Prerequisites](http://docs.openhab.org/installation/index.html#prerequisites)
 
 ### Java
 
@@ -12,7 +12,7 @@ $ apt-get install default-jre
 
 [Configure gpio pins](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
 
-- [Manual installation](http://docs.openhab.org/installation/linux.html#manual-installation).
+## Step 2 [Manual installation](http://docs.openhab.org/installation/linux.html#manual-installation).
 
 ~~~
 $ rm /opt/openhab2/*.bat
