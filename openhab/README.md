@@ -7,6 +7,18 @@
 $ rm /opt/openhab2/*.bat
 ~~~
 
+| Resource | Location | Comment |
+|---|---|---|
+| GPIO Exports | /sys/class/gpio | |
+| openhab.log<br>events.log | /opt/openhab2/userdata/logs | tail -f /opt/openhab2/userdata/logs/openhab.log -f /opt/openhab2/userdata/logs/events.log |
+| Karaf console | ssh -p 8101 openhab@localhost | default pass: habopen |
+| Service configuration | /opt/openhab2/openhab2 | Ex: change http/https port<br>OPENHAB_HTTP_PORT=1080<br>OPENHAB_HTTPS_PORT=50443 |
+| rrd4j databases | /opt/openhab2/userdata |  |
+| Site configuration | /opt/openhab2/conf | sitemap, items, things, etc. |
+| Service | /lib/systemd/system/openhab2.service |  |
+| add-on files | /usr/share/openhab2/addons |  |
+| openHAB application | /opt/openhab2 |  |
+
 ### Java
 
 ~~~
@@ -27,16 +39,14 @@ Install and configure [owserver](https://github.com/div-co/home_automation/tree/
 ### Z-Wave
 [Configure](https://github.com/div-co/home_automation/blob/master/openhab/zwave.md)
 
-### Resources (custom installation)
+### Messages brocker (Mosquitto)
+
+[MQTT](https://github.com/div-co/home_automation/tree/master/debian/mqtt)
 
 | Resource | Location | Comment |
 |---|---|---|
-| GPIO Exports | /sys/class/gpio | |
-| openhab.log<br>events.log | /opt/openhab2/userdata/logs | tail -f /opt/openhab2/userdata/logs/openhab.log -f /opt/openhab2/userdata/logs/events.log |
-| Karaf console | ssh -p 8101 openhab@localhost | default pass: habopen |
-| Service configuration | /opt/openhab2/openhab2 | Ex: change http/https port<br>OPENHAB_HTTP_PORT=1080<br>OPENHAB_HTTPS_PORT=50443 |
-| rrd4j databases | /opt/openhab2/userdata |  |
-| Site configuration | /opt/openhab2/conf | sitemap, items, things, etc. |
-| Service | /lib/systemd/system/openhab2.service |  |
-| add-on files | /usr/share/openhab2/addons |  |
-| openHAB application | /opt/openhab2 |  |
+| Mosquitto Config File | /mnt/mqtt/mosquitto.conf | [Default](https://mosquitto.org/man/mosquitto_passwd-1.html): /etc/mosquitto/mosquitto.conf |
+| MQTT Log | /mnt/nfs/logs/mosquitto/mosquitto.log |  |
+| Mosquitto Passwd | /mnt/mqtt/passwd | Default: /etc/mosquitto/passwd |
+
+
