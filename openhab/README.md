@@ -1,4 +1,4 @@
-# OpenHab2 Setup
+# OpenHab2 Customization
 
 ## Step 1 [Prerequisites](http://docs.openhab.org/installation/index.html#prerequisites)
 
@@ -36,14 +36,15 @@ $ rm /opt/openhab2/*.bat
 $ ls /sys/bus/w1/devices
 $ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 ~~~
-Install and configure [owserver](https://github.com/div-co/home_automation/tree/master/debian/owfs)
+- Install and configure [owserver](https://github.com/div-co/home_automation/tree/master/debian/owfs)
 
 ### Z-Wave
-[Configure](https://github.com/div-co/home_automation/blob/master/openhab/zwave.md)
+- [Configure](https://github.com/div-co/home_automation/blob/master/openhab/zwave.md)
 
-### Messages brocker (Mosquitto)
+### Messages brocker (MQTT)
 
-[MQTT](https://github.com/div-co/home_automation/tree/master/debian/mqtt)
+- [Install Mosquitto](https://github.com/div-co/home_automation/tree/master/debian/mqtt)
+- Customize Mosquitto Configuration
 
 | Resource | Location | Comment |
 |---|---|---|
