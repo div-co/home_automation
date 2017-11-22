@@ -56,8 +56,17 @@ $ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 | MQTT Log | /mnt/nfs/logs/mosquitto/mosquitto.log |  |
 | Mosquitto Passwd | /mnt/mqtt/passwd | Default: /etc/mosquitto/passwd |
 
-### Clear OH2 Cache
+### Troubleshoot
+
+**[ERROR]** [core.karaf.internal.FeatureInstaller] - Failed installing 'openhab-binding-*, openhab-persistence-*, openhab-ui-*, openhab-transformation-map, ... : Resource has no uri
+
+**Fix**
+
 ~~~
+$ service openhab2 stop
 $ rm -rf /opt/openhab2/userdata/cache/*
 $ rm -rf /opt/openhab2/userdata/tmp/*
+$ rm -rf /opt/openhab2/userdata/kar/*
+$ service openhab2 restart
 ~~~
+
