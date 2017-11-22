@@ -56,4 +56,8 @@ $ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 | MQTT Log | /mnt/nfs/logs/mosquitto/mosquitto.log |  |
 | Mosquitto Passwd | /mnt/mqtt/passwd | Default: /etc/mosquitto/passwd |
 
-
+### Clear OH2 Cache
+~~~
+$ rm -rf /opt/openhab2/userdata/cache/*
+$ rm -rf /opt/openhab2/userdata/tmp/*
+~~~
