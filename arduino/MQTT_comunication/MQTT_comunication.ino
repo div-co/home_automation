@@ -13,12 +13,12 @@ byte pushButton_LightsCounter = 0;           // counter for the number of button
 unsigned long startingTime = 0;
 char strConvert[10];
 
-byte pushButton_Lights = 3;
-byte pushButton_Fan = 4;
+byte pushButton_Lights = 4;
+byte pushButton_Fan = 3;
 byte control_CookerHoodLights = 18;
 byte control_CookerHoodFan = 6;
-byte control_BarLights = 15;
-byte control_SinkLights = 16;
+byte control_BarLights = 16;
+byte control_SinkLights = 15;
 
 byte state_BarLights = LOW;
 byte state_CookerHoodLights = LOW;  // the current state of the pin
@@ -34,7 +34,7 @@ long lastDebounceTime = 0;          // the last time the output pin was toggled
 byte debounceDelay = 30;            // the debounce time; increase if the output flickers
 
 EthernetClient ethClient;
-
+void callback(char* sub_topic, byte* payload, unsigned int length);
 PubSubClient MQTT_Client(MQTT_server, MQTT_PORT, callback, ethClient);
 
 int MQTT_Connect () 
@@ -55,12 +55,12 @@ int MQTT_Connect ()
               MQTT_Client.subscribe("/lights/hab/#");
               MQTT_Client.subscribe("/ventilation/hab/#");
               //Serial.print("Connected to MQTT brocker at porrt: ")& Serial.print(MQTT_PORT)&Serial.println("\n");
-              //return 1;
+              return 1;
           } else {
               Serial.println("Error connecting to MQTT\n");
-              //return 0;
+              return 0;
          }
-      } //else return 1;
+      } else return 1;
 }
 
 void callback(char* sub_topic, byte* payload, unsigned int length) 
@@ -69,50 +69,58 @@ void callback(char* sub_topic, byte* payload, unsigned int length)
 
       char cPayload[30];
       for (int i=0; i<=length; i++) {
-          cPayload[i]=(char)payload[i];
+        cPayload[i]=(char)payload[i];
       }
+      
       cPayload[length] = '\0';
       Serial.print("MQTT (callback):  ") & Serial.print(sub_topic) & Serial.print("  ") & Serial.println(cPayload);
  
-      String pub_topic = String(cPayload);     
+      String pub_topic = String(cPayload); 
       
       int iPayload = atoi(cPayload);
       
-      if (String (sub_topic) == "/lights/hab/BarLights") {
-           if (iPayload == 0) {
-              state_BarLights = LOW;
-              digitalWrite(control_BarLights, state_BarLights);
-           } else { 
-              state_BarLights = HIGH;
-              digitalWrite(control_BarLights, state_BarLights);
-           }
+      //Serial.println(sub_topic);
+      //Serial.println(cPayload);
+      
+      if(strcmp(sub_topic, "/ventilation/hab/CookerHoodFan") == 0) {
+        for (int i=0;i<length;i++) {
+          char receivedChar = (char)payload[i];
+            if (receivedChar == '1')
+              digitalWrite(control_CookerHoodFan, HIGH);
+            if (receivedChar == '0')
+              digitalWrite(control_CookerHoodFan, LOW);
+            }
       }
-      if (String (sub_topic) == "/lights/hab/CookerHoodLights") {
-           if (iPayload == 0) {
-              state_CookerHoodLights = LOW;
-              digitalWrite(control_CookerHoodLights, state_CookerHoodLights);
-           } else { 
-              state_CookerHoodLights = HIGH;
-              digitalWrite(control_CookerHoodLights, state_CookerHoodLights);
-           }
+
+      if(strcmp(sub_topic, "/lights/hab/CookerHoodLights") == 0) {
+        for (int i=0;i<length;i++) {
+          char receivedChar = (char)payload[i];
+            if (receivedChar == '1')
+              digitalWrite(control_CookerHoodLights, HIGH);
+            if (receivedChar == '0')
+              digitalWrite(control_CookerHoodLights, LOW);
+            }
       }
-      if (String (sub_topic) == "/lights/hab/SinkLights") {
-           if (iPayload == 0) {
-              state_SinkLights = LOW;
-              digitalWrite(control_SinkLights, state_SinkLights);
-           } else { 
-              state_SinkLights = HIGH;
-              digitalWrite(control_SinkLights, state_SinkLights);
-           }
+
+            
+      if(strcmp(sub_topic, "/lights/hab/BarLights") == 0) {
+        for (int i=0;i<length;i++) {
+          char receivedChar = (char)payload[i];
+            if (receivedChar == '1')
+              digitalWrite(control_BarLights, HIGH);
+            if (receivedChar == '0')
+              digitalWrite(control_BarLights, LOW);
+            }
       }
-      if (String (sub_topic) == "/ventilation/hab/CookerHoodFan") {
-           if (iPayload == 0) {
-             state_CookerHoodFan = LOW;
-             digitalWrite(control_CookerHoodFan, state_CookerHoodFan);
-           }else{
-             state_CookerHoodFan = HIGH;
-             digitalWrite(control_CookerHoodFan, state_CookerHoodFan);
-           }
+
+      if(strcmp(sub_topic, "/lights/hab/SinkLights") == 0) {
+        for (int i=0;i<length;i++) {
+          char receivedChar = (char)payload[i];
+            if (receivedChar == '1')
+              digitalWrite(control_SinkLights, HIGH);
+            if (receivedChar == '0')
+              digitalWrite(control_SinkLights, LOW);
+            }
       }
 }
 
@@ -143,7 +151,6 @@ void loop()
        
        byte reading = digitalRead(pushButton_Lights); // read the state of the switch into a local variable 
        byte readingFan = digitalRead(pushButton_Fan); // read the state of the switch into a local variable 
-       byte mqtt_connected = MQTT_Client.connected();
        
        if (readingFan != lastButtonState_Fan) {
            lastButtonState_Fan = millis(); // reset the debouncing timer
@@ -155,8 +162,8 @@ void loop()
                   state_CookerHoodFan = !state_CookerHoodFan;
                   digitalWrite(control_CookerHoodFan, state_CookerHoodFan);
                   itoa(state_CookerHoodFan,strConvert,5);
-                  if ( mqtt_connected ) { 
-                        MQTT_Client.publish("/ventilation/remote/CookerHoodFan",strConvert);
+                  if ( MQTT_Connect () ) { 
+                        MQTT_Client.publish("/ventilation/remote/CookerHoodFan", strConvert);
                       }
                  }
               }
@@ -187,9 +194,12 @@ void loop()
                   state_CookerHoodLights = !state_CookerHoodLights;
                   digitalWrite(control_CookerHoodLights, state_CookerHoodLights);
                   itoa(state_CookerHoodLights,strConvert,5);
-                  if ( mqtt_connected ) { 
-                      MQTT_Client.publish("/lights/remote/CookerHoodLights",strConvert); 
-                   }
+                  if ( MQTT_Connect () ) { 
+                      MQTT_Client.publish("/lights/remote/CookerHoodLights", strConvert); 
+                   } else {
+                    Enc28J60.init(mac);
+                    MQTT_Connect();
+                    }
                   pushButton_LightsCounter=0;
                   break;
               
@@ -197,9 +207,12 @@ void loop()
                   state_SinkLights = !state_SinkLights;
                   digitalWrite(control_SinkLights, state_SinkLights);
                   itoa(state_SinkLights,strConvert,5);
-                  if ( mqtt_connected ) { 
+                  if ( MQTT_Connect () ) { 
                       MQTT_Client.publish("/lights/remote/SinkLights",strConvert); 
-                   }
+                   } else {
+                    Enc28J60.init(mac);
+                    MQTT_Connect();
+                    }
                   pushButton_LightsCounter=0;
                 break;  
               
@@ -207,9 +220,12 @@ void loop()
                   state_BarLights = !state_BarLights;
                   digitalWrite(control_BarLights, state_BarLights);
                   itoa(state_BarLights,strConvert,5);
-                  if ( mqtt_connected ) { 
+                  if ( MQTT_Connect () ) { 
                       MQTT_Client.publish("/lights/remote/BarLights",strConvert); 
-                   }
+                   }else {
+                    Enc28J60.init(mac);
+                    MQTT_Connect();
+                    }
                   pushButton_LightsCounter=0;
                 break;
 
@@ -226,7 +242,7 @@ void loop()
                   Enc28J60.init(mac);
                   MQTT_Connect();
                   Ethernet.maintain();
-                  if ( !mqtt_connected ) {
+                  if ( !MQTT_Connect () ) {
                     byte counter = 0;
                     for(int ii = 0; ii <= 4; ii++) {
                       digitalWrite(control_SinkLights, !digitalRead(control_SinkLights) );
