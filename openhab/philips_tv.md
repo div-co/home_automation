@@ -1,0 +1,1 @@
+[jointSPACE Binding](http://docs.openhab.org/addons/bindings/jointspace1/readme.html#known-limitations)
