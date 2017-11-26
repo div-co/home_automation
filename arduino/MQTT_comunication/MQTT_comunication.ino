@@ -50,8 +50,9 @@ int MQTT_Connect ()
               MQTT_Client.publish("/lights/remote/BarLights",strConvert);
               itoa(state_SinkLights,strConvert,5);
               MQTT_Client.publish("/lights/remote/SinkLights",strConvert);
-              itoa(state_SinkLights,strConvert,5);
+              itoa(state_CookerHoodFan,strConvert,5);
               MQTT_Client.publish("/ventilation/remote/CookerHoodFan",strConvert);
+              
               MQTT_Client.subscribe("/lights/hab/#");
               MQTT_Client.subscribe("/ventilation/hab/#");
               //Serial.print("Connected to MQTT brocker at porrt: ")& Serial.print(MQTT_PORT)&Serial.println("\n");
