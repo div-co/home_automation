@@ -48,7 +48,8 @@
       <property name="vendor">TKB Home</property>
       <property name="modelId">TZ06</property>
       <property name="manufacturerId">0118</property>
-      <property name="manufacturerRef">0001:0004,0001:0013</property>
+	  <!-- property name="manufacturerRef">0001:0004,0001:0013</property -->
+      <property name="manufacturerRef">0001:0004</property>
       <property name="dbReference">156</property>
       <property name="defaultAssociations">1</property>
     </properties>
