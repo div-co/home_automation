@@ -62,6 +62,11 @@ $ dmesg -c
 $ cat /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
 ~~~
 
+### GPIO
+~~~
+$ ll /sys/class/gpio
+~~~
+
 ### Expansion Voltages
 
 | VDD | Description |
