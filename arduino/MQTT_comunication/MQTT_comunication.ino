@@ -1,7 +1,6 @@
 #include <UIPEthernet.h>
 #include "PubSubClient.h"
 
-#define MANUAL_INTERVAL 9000  // Manual function check interval will be on each 15 min
 #define MQTT_PORT 1883        // MQTT Server port
 
 byte MQTT_server[] = { 192,168,50,7 };      // IP Address of the MQTT server
@@ -34,10 +33,11 @@ long lastDebounceTime = 0;          // the last time the output pin was toggled
 byte debounceDelay = 30;            // the debounce time; increase if the output flickers
 
 EthernetClient ethClient;
+
 void callback(char* sub_topic, byte* payload, unsigned int length);
 PubSubClient MQTT_Client(MQTT_server, MQTT_PORT, callback, ethClient);
 
-int MQTT_Connect () 
+void MQTT_Connect () 
 {
       if (!MQTT_Client.connected()) {
           if ( MQTT_Client.connect("Kitchen controller") ) {
@@ -56,12 +56,10 @@ int MQTT_Connect ()
               MQTT_Client.subscribe("/lights/hab/#");
               MQTT_Client.subscribe("/ventilation/hab/#");
               //Serial.print("Connected to MQTT brocker at porrt: ")& Serial.print(MQTT_PORT)&Serial.println("\n");
-              return 1;
           } else {
               Serial.println("Error connecting to MQTT\n");
-              return 0;
          }
-      } else return 1;
+      }
 }
 
 void callback(char* sub_topic, byte* payload, unsigned int length) 
@@ -79,9 +77,6 @@ void callback(char* sub_topic, byte* payload, unsigned int length)
       String pub_topic = String(cPayload); 
       
       int iPayload = atoi(cPayload);
-      
-      //Serial.println(sub_topic);
-      //Serial.println(cPayload);
       
       if(strcmp(sub_topic, "/ventilation/hab/CookerHoodFan") == 0) {
         for (int i=0;i<length;i++) {
@@ -102,7 +97,6 @@ void callback(char* sub_topic, byte* payload, unsigned int length)
               digitalWrite(control_CookerHoodLights, LOW);
             }
       }
-
             
       if(strcmp(sub_topic, "/lights/hab/BarLights") == 0) {
         for (int i=0;i<length;i++) {
@@ -142,13 +136,14 @@ void setup()
       digitalWrite(control_CookerHoodFan, state_CookerHoodFan);
       
       Serial.print("IP Address: ")& Serial.println(Ethernet.localIP());
-      MQTT_Connect();      
+      MQTT_Connect();
 }
 
-
 void loop()
-{
+{   
        MQTT_Client.loop();
+       
+       byte active_mqtt = MQTT_Client.connected();
        
        byte reading = digitalRead(pushButton_Lights); // read the state of the switch into a local variable 
        byte readingFan = digitalRead(pushButton_Fan); // read the state of the switch into a local variable 
@@ -162,8 +157,9 @@ void loop()
               if (pushButton_Fan_State == HIGH) {
                   state_CookerHoodFan = !state_CookerHoodFan;
                   digitalWrite(control_CookerHoodFan, state_CookerHoodFan);
+                  //Serial.print("Fan: ")& Serial.println(state_CookerHoodFan);
                   itoa(state_CookerHoodFan,strConvert,5);
-                  if ( MQTT_Connect () ) { 
+                  if ( active_mqtt ) { 
                         MQTT_Client.publish("/ventilation/remote/CookerHoodFan", strConvert);
                       }
                  }
@@ -195,12 +191,9 @@ void loop()
                   state_CookerHoodLights = !state_CookerHoodLights;
                   digitalWrite(control_CookerHoodLights, state_CookerHoodLights);
                   itoa(state_CookerHoodLights,strConvert,5);
-                  if ( MQTT_Connect () ) { 
+                  if ( active_mqtt ) { 
                       MQTT_Client.publish("/lights/remote/CookerHoodLights", strConvert); 
-                   } else {
-                    Enc28J60.init(mac);
-                    MQTT_Connect();
-                    }
+                   }
                   pushButton_LightsCounter=0;
                   break;
               
@@ -208,49 +201,50 @@ void loop()
                   state_SinkLights = !state_SinkLights;
                   digitalWrite(control_SinkLights, state_SinkLights);
                   itoa(state_SinkLights,strConvert,5);
-                  if ( MQTT_Connect () ) { 
+                  if ( active_mqtt ) { 
                       MQTT_Client.publish("/lights/remote/SinkLights",strConvert); 
-                   } else {
-                    Enc28J60.init(mac);
-                    MQTT_Connect();
-                    }
-                  pushButton_LightsCounter=0;
+                   } 
+                   pushButton_LightsCounter=0;
                 break;  
               
               case 3: // pushButton_LightsCounter = 3
                   state_BarLights = !state_BarLights;
                   digitalWrite(control_BarLights, state_BarLights);
                   itoa(state_BarLights,strConvert,5);
-                  if ( MQTT_Connect () ) { 
+                  if ( active_mqtt ) { 
                       MQTT_Client.publish("/lights/remote/BarLights",strConvert); 
-                   }else {
-                    Enc28J60.init(mac);
-                    MQTT_Connect();
-                    }
+                   }
                   pushButton_LightsCounter=0;
                 break;
 
                case 4:
-                Serial.println("Lights button pressed 4 times: Do nothing.");
+                Serial.println("MQTT Server Connection Status Check ... ");
+                if (!active_mqtt){
+                  digitalWrite(control_SinkLights, !digitalRead(control_SinkLights));
+                  delay(1000);
+                  digitalWrite(control_SinkLights, !digitalRead(control_SinkLights));
+                  } else {
+                    digitalWrite(control_SinkLights, !digitalRead(control_SinkLights));
+                    }
                 pushButton_LightsCounter=0;
                break;
 
                case 5:
                   Serial.println("Reconnecting MQTT Server ... ");
                   digitalWrite(control_SinkLights, !digitalRead(control_SinkLights));
-                  delay(500);
+                  delay(1000);
                   digitalWrite(control_SinkLights, !digitalRead(control_SinkLights));
                   Enc28J60.init(mac);
                   MQTT_Connect();
                   Ethernet.maintain();
-                  if ( !MQTT_Connect () ) {
+                  if ( !active_mqtt ) {
                     byte counter = 0;
-                    for(int ii = 0; ii <= 4; ii++) {
+                    for(int ii = 0; ii <= 5; ii++) {
                       digitalWrite(control_SinkLights, !digitalRead(control_SinkLights) );
                       delay(300);
                       counter++;
                     }
-                  } 
+                  }
                   digitalWrite(control_SinkLights, LOW);
                   pushButton_LightsCounter=0;
                 break;
