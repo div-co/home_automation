@@ -8,6 +8,8 @@ $ vi /opt/openhab2/conf/services/zwave.cfg
 
 ### Customize zwave binding
 
+Before proceed with the below steps check if th device exists in [Z-Wave Device Database](http://www.cd-jackson.com/index.php/zwave/zwave-device-database)
+
 1. Uninstall `org.openhab.binding.zwave` binding from Habmin
 2. Stop openhab2 service
 3. Copy `org.openhab.binding.zwave-2.x.0-SNAPSHOT.jar` to `/opt/openhab2/addons`
@@ -27,5 +29,3 @@ openhab>feature:install openhab-transport-serial
 ~~~
 vi /opt/openhab2/userdata/zwave/nodeXX.xml
 ~~~
-
-[Z-Wave Device Database](http://www.cd-jackson.com/index.php/zwave/zwave-device-database)
