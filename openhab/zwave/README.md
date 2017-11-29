@@ -8,7 +8,7 @@ $ vi /opt/openhab2/conf/services/zwave.cfg
 
 ### Customize zwave binding
 
-Before proceed with the below steps check if th device exists in [Z-Wave Device Database](http://www.cd-jackson.com/index.php/zwave/zwave-device-database)
+Before proceed with the below steps check if the device exists in [Z-Wave Device Database](http://www.cd-jackson.com/index.php/zwave/zwave-device-database)
 
 1. Uninstall `org.openhab.binding.zwave` binding from Habmin
 2. Stop openhab2 service
