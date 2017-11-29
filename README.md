@@ -15,6 +15,8 @@ My home automation project includes the following steps
 - 1-Wire sensors
 - ESP8266
 
+![BBB](https://github.com/div-co/home_automation/blob/master/beaglebone/img/bbb.jpg)
+
 ### Software
 
 - [Debian](https://github.com/div-co/home_automation/tree/master/debian#os-configuration)
