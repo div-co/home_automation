@@ -2,7 +2,7 @@
 
 Replace the original control board of an cooker hood with ATmega328P and extend its functionality. Connect the board to OpenHab via MQTT [send/receive commands] by using serial pins and external Arduino with ethernet module.
 
-![controller](https://github.com/div-co/home_automation/blob/master/arduino/pics/cooker_hood_controller.jpg)
+![controller](https://github.com/div-co/home_automation/blob/master/arduino/pics/cooker_hood_controller.JPG)
 
 ### Prerequisits
 * 220/230 V 
