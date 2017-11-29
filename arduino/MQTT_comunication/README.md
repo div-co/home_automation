@@ -12,4 +12,4 @@
 - send messages to MQTT server on output change
 - receive MQTT messages status and update digital pins status
 
-![controller](https://github.com/div-co/home_automation/blob/master/arduino/MQTT_comunication/controller.jpg)
+![controller](https://github.com/div-co/home_automation/blob/master/arduino/pics/controller.jpg)
