@@ -196,13 +196,12 @@ void pushButtonHandler(byte active_mqtt) {
 
 void loop() {
     MQTT_Client.loop();
-
     byte active_mqtt = MQTT_Client.connected();
 
-    byte reading = digitalRead(pushButton_Lights); // read the state of the switch into a local variable
     byte readingFan = digitalRead(pushButton_Fan); // read the state of the switch into a local variable
-
     if (readingFan != lastButtonState_Fan) {
+        //      ТУКА НЕ ТРЯБВА ЛИ ДА Е lastDebounceTime = millis() вместо lastButtonState_Fan?
+        //      Това с вентилатора не ми изглежда да работи много надеждно...
         lastButtonState_Fan = millis(); // reset the debouncing timer
     }
     if ((millis() - lastDebounceTime) > debounceDelay) {
@@ -221,6 +220,7 @@ void loop() {
     }
     lastButtonState_Fan = readingFan;
 
+    byte reading = digitalRead(pushButton_Lights); // read the state of the switch into a local variable
     if (reading != lastButtonState_Lights) {
         lastDebounceTime = millis(); // reset the debouncing timer
     }
