@@ -1,7 +1,8 @@
 #include <UIPEthernet.h>
 #include "PubSubClient.h"
 
-#define MQTT_PORT 1883        // MQTT Server port
+
+
 const char OFF = '0';
 const char ON = '1';
 const char* VENTILATION_HAB = "/ventilation/hab/#";
@@ -14,9 +15,14 @@ const char* LIGHTS_HAB_SINK_LIGHTS = "/lights/hab/SinkLights";
 const char* LIGHTS_HAB_BAR_LIGHTS = "/lights/hab/BarLights";
 const char* LIGHTS_HAB_COOKER_HOOD_LIGHTS = "/lights/hab/CookerHoodLights";
 const char* VENTILATION_HAB_COOKER_HOOD_FAN = "/ventilation/hab/CookerHoodFan";
+const unsigned int MQTT_RECONNECT_INTERVAL = 60000;
+const int MQTT_PORT = 1883;       // MQTT Server port
 
 byte MQTT_server[] = { 192, 168, 50, 7 };      // IP Address of the MQTT server
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+bool mqttDisconnectDetected = true;
+unsigned long mqttReconnectTimer = 0;
+
 
 IPAddress ip(192, 168, 50, 200);
 
@@ -49,7 +55,7 @@ EthernetClient ethClient;
 void callback(char* sub_topic, byte* payload, unsigned int length);
 PubSubClient MQTT_Client(MQTT_server, MQTT_PORT, callback, ethClient);
 
-void MQTT_Connect() {
+void mqttConnect() {
     if (!MQTT_Client.connected()) {
         if (MQTT_Client.connect("Kitchen controller")) {
             MQTT_Client.publish("Arduino", "Kitchen controller");
@@ -67,6 +73,7 @@ void MQTT_Connect() {
             MQTT_Client.subscribe(LIGHTS_HAB);
             MQTT_Client.subscribe(VENTILATION_HAB);
             //Serial.print("Connected to MQTT brocker at porrt: ")& Serial.print(MQTT_PORT)&Serial.println("\n");
+            mqttDisconnectDetected = false;
         } else {
             Serial.println("Error connecting to MQTT\n");
         }
@@ -74,7 +81,7 @@ void MQTT_Connect() {
 }
 
 void updateStateFromMQTT(byte pin, unsigned int length, byte* payload) {
-    for (int i = 0; i < length; i++) {
+    for (unsigned int i = 0; i < length; i++) {
         char receivedChar = (char) (payload[i]);
         if (receivedChar == ON)
             digitalWrite(pin, HIGH);
@@ -88,12 +95,12 @@ void callback(char* sub_topic, byte* payload, unsigned int length) {
     // ##### this function is the main part that triggers event based on the MQTT received messages. All the important input stuff is here...
 
     char cPayload[30];
-    for (int i = 0; i <= length; i++) {
+    for (unsigned int i = 0; i <= length; i++) {
         cPayload[i] = (char) payload[i];
     }
 
     cPayload[length] = '\0';
-    Serial.print("MQTT (callback):  ") & Serial.print(sub_topic) & Serial.print("  ") & Serial.println(cPayload);
+    Serial.print("MQTT (callback):  "); Serial.print(sub_topic); Serial.print("  "); Serial.println(cPayload);
 
     // тези две променливи не виждам да ги ползваш някъде
 //      String pub_topic = String(cPayload);
@@ -113,25 +120,6 @@ void callback(char* sub_topic, byte* payload, unsigned int length) {
     if (strcmp(sub_topic, LIGHTS_HAB_SINK_LIGHTS) == 0) {
         updateStateFromMQTT(control_SinkLights, length, payload);
     }
-}
-
-void setup() {
-    Serial.begin(115200);
-    Ethernet.begin(mac, ip);
-    pinMode(pushButton_Lights, INPUT);
-    pinMode(pushButton_Fan, INPUT);
-    pinMode(control_CookerHoodFan, OUTPUT);
-    pinMode(control_CookerHoodLights, OUTPUT);
-    pinMode(control_SinkLights, OUTPUT);
-    pinMode(control_BarLights, OUTPUT);
-
-    digitalWrite(control_CookerHoodLights, state_CookerHoodLights);
-    digitalWrite(control_BarLights, state_BarLights);
-    digitalWrite(control_SinkLights, state_SinkLights);
-    digitalWrite(control_CookerHoodFan, state_CookerHoodFan);
-
-    Serial.print("IP Address: ") & Serial.println(Ethernet.localIP());
-    MQTT_Connect();
 }
 
 void buttonControl(byte* state, byte control, const char* topic, byte active_mqtt) {
@@ -175,7 +163,7 @@ void pushButtonHandler(byte active_mqtt) {
             delay(1000);
             digitalWrite(control_SinkLights, !digitalRead(control_SinkLights));
             Enc28J60.init(mac);
-            MQTT_Connect();
+            mqttConnect();
             Ethernet.maintain();
             if (!active_mqtt) {
                 byte counter = 0;
@@ -193,9 +181,42 @@ void pushButtonHandler(byte active_mqtt) {
     }
 }
 
+void setup() {
+    Serial.begin(115200);
+    Ethernet.begin(mac, ip);
+    pinMode(pushButton_Lights, INPUT);
+    pinMode(pushButton_Fan, INPUT);
+    pinMode(control_CookerHoodFan, OUTPUT);
+    pinMode(control_CookerHoodLights, OUTPUT);
+    pinMode(control_SinkLights, OUTPUT);
+    pinMode(control_BarLights, OUTPUT);
+
+    digitalWrite(control_CookerHoodLights, state_CookerHoodLights);
+    digitalWrite(control_BarLights, state_BarLights);
+    digitalWrite(control_SinkLights, state_SinkLights);
+    digitalWrite(control_CookerHoodFan, state_CookerHoodFan);
+
+    Serial.print("IP Address: "); Serial.println(Ethernet.localIP());
+    mqttConnect();
+}
+
+void handleMqttReconnection() {
+    if (!mqttDisconnectDetected) {
+        mqttDisconnectDetected = true;
+        mqttReconnectTimer = millis();
+    }
+    if (millis() - mqttReconnectTimer > MQTT_RECONNECT_INTERVAL) {
+        mqttConnect();
+    }
+}
+
 void loop() {
-    MQTT_Client.loop();
     byte active_mqtt = MQTT_Client.connected();
+    if (active_mqtt) {
+        MQTT_Client.loop();
+    } else {
+        handleMqttReconnection();
+    }
 
     byte readingFan = digitalRead(pushButton_Fan); // read the state of the switch into a local variable
     if (readingFan != lastButtonState_Fan) {
