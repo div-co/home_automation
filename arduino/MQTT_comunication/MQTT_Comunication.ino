@@ -111,7 +111,7 @@ void callback(char* sub_topic, byte* payload, unsigned int length) {
     }
 
     if (strcmp(sub_topic, LIGHTS_HAB_SINK_LIGHTS) == 0) {
-        updateStateFromMQTT(controcontrol_SinkLightsl_BarLights, length, payload);
+        updateStateFromMQTT(control_SinkLights, length, payload);
     }
 }
 
@@ -136,13 +136,12 @@ void setup() {
 
 void buttonControl(byte* state, byte control, const char* topic, byte active_mqtt) {
     *state = !*state;
-    digitalWrite(control, state);
+    digitalWrite(control, *state);
     if (active_mqtt) {
         char strConvert[10];
-        itoa(state, strConvert, 5);
+        itoa(*state, strConvert, 5);
         MQTT_Client.publish(topic, strConvert);
     }
-    return 0;
 }
 
 void pushButtonHandler(byte active_mqtt) {
