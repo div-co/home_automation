@@ -15,7 +15,14 @@ $ apt-get update
 $ apt-get install mosquitto mosquitto-clients
 ~~~
 
+### Add user to password file
+
+~~~
+$ mosquitto_passwd -c /etc/mosquitto/passwd hab
+~~~
+
 ### Configure mosquitto security and log section
+
 ~~~
 $ vi /etc/mosquitto/mosquitto.conf
     ...
@@ -25,9 +32,16 @@ $ vi /etc/mosquitto/mosquitto.conf
     log_dest /var/log/mosquitto.log
 ~~~
 
-### Add user to password file
+### Start Mosquitto 
+
 ~~~
-$ mosquitto_passwd -c /etc/mosquitto/passwd hab
+mosquitto -c /etc/mosquitto/mosquitto.conf -d -p 1883
+~~~
+
+### Check topics
+
+~~~
+mosquitto_sub -h 127.0.0.1 -t "#" -v
 ~~~
 
 More on Mosquitto configuration file at: http://mosquitto.org/man/mosquitto-conf-5.html
