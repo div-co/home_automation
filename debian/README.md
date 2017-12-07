@@ -84,7 +84,7 @@ $ vntpq -p
 Change Time zone
 ~~~ 
 $ vi /etc/timezone
-	server Europe/Sofia
+	Europe/Sofia
 ~~~
 To see or change what timezone your Debian system is configured for
 ~~~
