@@ -66,9 +66,9 @@ $ mkdir -p /mnt/nfs/backup
 $ mkdir backup
 $ vi /etc/fstab
 	...
-	NFS_SERVER:/NFS_SHARE/src /mnt/nfs/src nfs rw,sync,hard,intr  0  0
-	NFS_SERVER:/NFS_SHARE/logs /mnt/nfs/logs nfs rw,sync,hard,intr  0  0
-	NFS_SERVER:/NFS_SHARE/backup /mnt/nfs/backup nfs rw,sync,hard,intr  0  0
+	NFS_SERVER:/NFS_SHARE/src /mnt/nfs/src nfs _netdev,rw,sync,hard,intr  0  0
+	NFS_SERVER:/NFS_SHARE/logs /mnt/nfs/logs nfs _netdev,rw,sync,hard,intr  0  0
+	NFS_SERVER:/NFS_SHARE/backup /mnt/nfs/backup nfs _netdev,rw,sync,hard,intr  0  0
 $ mount -a
 ~~~
 
