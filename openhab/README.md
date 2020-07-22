@@ -5,7 +5,7 @@
 ### Java
 
 ~~~
-$ apt-get install default-jre
+apt-get install default-jre
 ~~~
 
 ### GPIO
@@ -17,7 +17,7 @@ $ apt-get install default-jre
 - [Manual installation](http://docs.openhab.org/installation/linux.html#manual-installation).
 
 ~~~
-$ rm /opt/openhab2/*.bat
+rm /opt/openhab2/*.bat
 ~~~
 
 | Resource | Location | Comment |
@@ -34,16 +34,14 @@ $ rm /opt/openhab2/*.bat
 
 ### OneWire
 
-- Install and configure [owserver](https://github.com/div-co/home_automation/tree/master/debian/owfs)
-
 ~~~
-$ ls /sys/bus/w1/devices
-$ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
+ls /sys/bus/w1/devices
+cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 ~~~
 
 ### Z-Wave
 
-- [Configure](https://github.com/div-co/home_automation/blob/master/openhab/zwave.md)
+- [Configure](zwave.md)
 
 ### Messages brocker (MQTT)
 
