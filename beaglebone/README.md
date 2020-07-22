@@ -40,6 +40,8 @@ $ vi /boot/uEnv.txt
 	disable_uboot_overlay_audio=1
 	disable_uboot_overlay_wireless=1
 	disable_uboot_overlay_adc=1
+	###Cape Universal Enable
+	#enable_uboot_cape_universal=1
 ~~~
 
 ### Configure cape manager
