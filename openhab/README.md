@@ -61,10 +61,10 @@ cat /sys/bus/w1/devices/28-0014203825ff/w1_slave
 **Fix**
 
 ~~~
-$ service openhab2 stop
-$ rm -rf /opt/openhab2/userdata/cache/*
-$ rm -rf /opt/openhab2/userdata/tmp/*
-$ rm -rf /opt/openhab2/userdata/kar/*
-$ service openhab2 restart
+service openhab2 stop
+rm -rf /opt/openhab2/userdata/cache/*
+rm -rf /opt/openhab2/userdata/tmp/*
+rm -rf /opt/openhab2/userdata/kar/*
+service openhab2 restart
 ~~~
 
