@@ -16,14 +16,14 @@ If the boar doesn’t start after the above procedure check the image version if
 
 ### Check pinmux assignment
 ~~~
-$ cat /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
+cat /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
 ~~~
 Make sure you will not use a pin which is allocated, i.e.<br>`pin 32 (PIN32): 481d8000.mmc (GPIO UNCLAIMED) function pinmux_emmc_pins group pinmux_emmc_pins`
 
 ### Build dtbo files with dtc
 ~~~
-$ dtc -W no-unit_address_vs_reg -@ -I dts -O dtb -o /lib/firmware/W1-00A0.dtbo W1-00A0.dts
-$ dtc -W no-unit_address_vs_reg -@ -I dts -O dtb -o /lib/firmware/GPIO-00A0.dtbo GPIO-00A0.dts
+dtc -W no-unit_address_vs_reg -@ -I dts -O dtb -o /lib/firmware/W1-00A0.dtbo W1-00A0.dts
+dtc -W no-unit_address_vs_reg -@ -I dts -O dtb -o /lib/firmware/GPIO-00A0.dtbo GPIO-00A0.dts
 ~~~
 
 
@@ -31,7 +31,8 @@ $ dtc -W no-unit_address_vs_reg -@ -I dts -O dtb -o /lib/firmware/GPIO-00A0.dtbo
 
 The below configuration will enable 2 custom capes and will disable HDMI + Audio, Wireless, ADC.
 ~~~
-$ vi /boot/uEnv.txt
+vi /boot/uEnv.txt
+	...
 	###Additional custom capes
 	uboot_overlay_addr4=/lib/firmware/W1-00A0.dtbo
 	uboot_overlay_addr5=/lib/firmware/GPIO-00A0.dtbo
@@ -40,9 +41,12 @@ $ vi /boot/uEnv.txt
 	disable_uboot_overlay_audio=1
 	disable_uboot_overlay_wireless=1
 	disable_uboot_overlay_adc=1
+	...
 	###Cape Universal Enable
 	#enable_uboot_cape_universal=1
+	...
 ~~~
+[elinux BeagleBoneBlack_Debian](https://elinux.org/Beagleboard:BeagleBoneBlack_Debian)
 
 ### Configure cape manager
 
@@ -55,18 +59,18 @@ vi /etc/default/capemgr
 ### Restart BBB
 
 ~~~
-$ reboot
+reboot
 ~~~
 
 ### Check cape/pinmux configuration again
 ~~~
-$ dmesg -c
-$ cat /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
+dmesg -c
+cat /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
 ~~~
 
 ### GPIO
 ~~~
-$ ll /sys/class/gpio
+ll /sys/class/gpio
 ~~~
 
 ### Expansion Voltages
@@ -111,5 +115,5 @@ If you always want to boot from your microSD card you can invalidate the boot pa
 
 :warning: The below command invalidate the boot partition on eMMC. :warning:
 ~~~
-$ sudo dd if=/dev/zero of=/dev/mmcblk1 bs=1024 count=1024
+sudo dd if=/dev/zero of=/dev/mmcblk1 bs=1024 count=1024
 ~~~

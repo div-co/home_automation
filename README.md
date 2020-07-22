@@ -20,10 +20,7 @@ My home automation project includes the following steps
 ### Software
 
 - [Debian](https://github.com/div-co/home_automation/tree/master/debian#os-configuration)
-- Oracle Java (for ARM)
+- Java (for ARM)
 - MySQL
 - [openHAB](https://github.com/div-co/home_automation/tree/master/openhab), HABmin
-- Owserver / OWFS
-- SIGAR (provide [System Info](https://github.com/div-co/home_automation/tree/master/debian/systeminfo)rmation)
 - [Mosquitto](https://github.com/div-co/home_automation/blob/master/debian/mqtt/README.md.md) (MQTT Broker)
-- Openenergy Monitor
