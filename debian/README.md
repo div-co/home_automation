@@ -1,22 +1,40 @@
 # OS configuration
 
 ### Connect via Serial or Linux USB Ethernet/RNDIS
+
 ~~~
-$ ssh debian@192.168.7.2
-$ passwd
+ssh debian@192.168.7.2
+passwd
 ~~~
 default Debian username:password is [debian:temppwd]
 
-### Change the hostname
+### Rename default Debian user
+
 ~~~
-$ vi /etc/hosts
-$ vi /etc/hostname		
+adduser temp
+adduser temp sudo
+exit
+
+ssh temp@192.168.7.2
+mv /home/debian/ /home/new_account_name
+usermod --login new_account_name --move-home --home /home/new_account_name new_account_name
+exit
+
+ssh new_account_name@192.168.7.2
+deluser temp
+~~~
+
+### Change the hostname
+
+~~~
+nano /etc/hosts
+nano /etc/hostname		
 ~~~
 
 ### Configure Network Adapter (eth0)
 
 ~~~
-$ vi /etc/network/interfaces
+nano /etc/network/interfaces
 	...
 	iface eth0 inet static
 		address 192.168.0.7
@@ -29,7 +47,7 @@ $ vi /etc/network/interfaces
 ### Configure name resolution
 
 ~~~
-$ vi /etc/resolv.conf
+nano /etc/resolv.conf
 	...
 	nameserver 192.168.0.1
 	...
@@ -37,54 +55,48 @@ $ vi /etc/resolv.conf
 
 ### Create alias `ll`
 ~~~
-$ vi ~/.profile
+echo "alias ll='ls $LS_OPTIONS -l'" >> ~/.profile
+echo "alias l='ls $LS_OPTIONS -lA'" >> ~/.profile
 	...
-	alias ll='ls $LS_OPTIONS -l'
-	alias l='ls $LS_OPTIONS -lA'
-	...
-$ source ~/.profile
+source ~/.profile
 ~~~
 
 ### Packages
 
 ~~~
-$ apt-get update
-$ apt-get upgrade
-$ apt-get remove c9-core-installer
-$ apt-get install nfs-common portmap locate
-$ sudo apt-get remove --purge x11-common
-$ sudo apt-get --purge autoremove
+apt-get remove --purge x11-common c9-core-installer
+sudo apt-get --purge autoremove
+apt-get update && apt-get upgrade
+apt-get install nfs-common portmap locate
 ~~~
 See also [U-boot configuration (capes)](https://github.com/div-co/home_automation/tree/master/beaglebone#configure-u-boot-cape)
 
 ### Mount NFS storages
 
 ~~~
-$ mkdir -p /mnt/nfs/src
-$ mkdir -p /mnt/nfs/logs
-$ mkdir -p /mnt/nfs/backup
-$ mkdir backup
-$ vi /etc/fstab
+mkdir -p /mnt/nfs/{src,logs,backup}
+mkdir -p /opt/openhab2
+nano /etc/fstab
 	...
+	NFS_SERVER:/NFS_SHARE/openhab2 /opt/openhab2 nfs _netdev,rw,sync,hard,intr  0  0
 	NFS_SERVER:/NFS_SHARE/src /mnt/nfs/src nfs _netdev,rw,sync,hard,intr  0  0
 	NFS_SERVER:/NFS_SHARE/logs /mnt/nfs/logs nfs _netdev,rw,sync,hard,intr  0  0
 	NFS_SERVER:/NFS_SHARE/backup /mnt/nfs/backup nfs _netdev,rw,sync,hard,intr  0  0
-$ mount -a
+mount -a
 ~~~
 
 ### Setup NTP client
 
 ~~~
-$ cat /etc/ntp.conf
+cat /etc/ntp.conf
 ~~~	
 To see servers you are syncing wit
 ~~~
-$ vntpq -p
+vntpq -p
 ~~~
 Change Time zone
 ~~~ 
-$ vi /etc/timezone
-	Europe/Sofia
+cat "Europe/Sofia" > /etc/timezone
 ~~~
 To see or change what timezone your Debian system is configured for
 ~~~
