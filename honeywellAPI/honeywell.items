@@ -1,0 +1,9 @@
+String Honeywell_AuthCode     // Stores the most recent auth-code returned by the HTML above
+String Honeywell_APIKey       // Stores the API Consumer Key
+String Honeywell_APISecret    // Stores the API Consumer Secret
+String Honeywell_AccessToken  // Stores the token used for subsequent API requests
+String Honeywell_RefreshToken // Stores the token used to request another AccessToken
+Number Honeywell_Expiration   // Stores when the auth token expires (don't know the units, minutes perhaps?)
+Switch Honeywell_Refresh      // A switch to run a rule to request a new auth token.
+
+// not shown are the "functional" items that hold stuff like heating setpoints and such

@@ -1,0 +1,152 @@
+/*
+ * APIKey and APISecret need to be populated manually.
+ *
+ * The AccessToken, RefreshToken and Expiration will be populated when a request is made with the AuthCode or RefreshToken to get a new one.
+ *
+ * These are the Items needed to handle the authentication and authorization necessary to get the AuthToken.
+ **/
+
+var HashMap = Java.type("java.util.HashMap");
+var HTTP = Java.type("org.openhab.core.model.script.actions.HTTP");
+
+/*
+ * When making the requests for an AuthToken, the requests use Basic Authentication 
+ * using the APIKey as the username and APISecret as the password. 
+ * These need to be concatenated and encoded using Base64 and added as a header in the HTTP call.
+ **/
+var encodeAuth = function(){
+  var Base64 = Java.type("java.util.Base64");
+  var Encoder = Base64.getEncoder();
+
+  var authStr = items["Honeywell_APIKey"].toString() + ":" + items["Honeywell_APISecret"].toString();              
+  var authEncoded = Encoder.encodeToString(authStr.getBytes("UTF-8"));
+  return authEncoded;
+};
+
+/* The JSON that is returned is in JSON an has four values. 
+ * The three relevant values (the fourth will always be “Bearer”) 
+ * are parsed out and the relevant Items updated. 
+ * This function will block until the AuthToken Item has been updated.
+ **/
+var processAuth = function(jsonStr){
+  var parsed = JSON.parse(jsonStr);
+  if(parsed.access_token === undefined || parsed.refresh_token === undefined || parsed.expires_in === undefined){
+    logger.error("Received unparsable auth JSON:\n" + jsonStr);
+  }
+  else {
+    events.postUpdate("Honeywell_AccessToken", parsed.access_token);
+    events.postUpdate("Honeywell_RefreshToken", parsed.refresh_token);
+    events.postUpdate("Honeywell_Expiration", parsed.expires_in);
+
+    while(items["Honeywell_AccessToken"].toString() != parsed.access_token) {
+      logger.info("Waiting for Item to update: item="+items["Honeywell_AccessToken"]+ " new="+ parsed.access_token);
+      java.lang.Thread.sleep(500);
+    }
+  }
+};
+
+/*
+ * This function will be called when a new authcode is received or when using the refresh token. 
+ * It makes the API call to get new tokens.
+ **/
+var requestAuthToken = function(refresh){
+  refresh = refresh || true;
+
+  if(refresh && items["Honeywell_RefreshToken"].class === UnDefType.class){
+    logger.error("Refresh token is undefined!");
+    return false;
+  }
+  else if(!refresh && items["Honeywell_AuthCode"].class === UnDefType.class){
+    logger.error("Auth code is undefined!");
+    return false;
+  }
+
+  var TOKEN_URL = "https://api.honeywell.com/oauth2/token";
+  var GT_AUTHCODE = "grant_type="+((refresh) ? "refresh_token" : "authorization_code");
+  var REDIRECT_URL = "redirect_uri=https%3A%2F%2Fmyopenhab.org%2Fstatic%2Foauth2.html";
+  var CODE = (refresh) ? "refresh_token="+items["Honeywell_RefreshToken"] : REDIRECT_URL+"&code="+items["Honeywell_AuthCode"];
+
+  var authEncoded = encodeAuth();
+
+  logger.info(items["Honeywell_RefreshToken"] + " " + items["Honeywell_AuthCode"]);
+  logger.info("URL: " + TOKEN_URL + " Auth Code: " + GT_AUTHCODE + " CODE: " + CODE);
+
+  // Build the header
+  var header = new HashMap();
+  header.put("Authorization", "Basic " + authEncoded);
+  header.put("Accept", "application/json");
+
+  var results = HTTP.sendHttpPostRequest("https://api.honeywell.com/oauth2/token",
+                                         "application/x-www-form-urlencoded",
+                                         GT_AUTHCODE+"&"+CODE,
+                                         header,
+                                         15000);
+
+  logger.debug("Results from request for auth token: " + results);
+  if(results !== null && results != "" && results !== undefined) {
+    processAuth(results);
+    return true;
+  }
+  else {
+    logger.error("Failed to retrieve auth token!");
+    return false;
+  }
+
+};
+
+/*
+ * When making an API request the code will make two tries at the call. 
+ * If the first one fails with an unauthorized message the AuthToken will be refreshed and then the call will be made again. 
+ * This separates out the building of the header with the AuthToken so it’s easier to create that second request.
+ **/
+var buildBearerHeader = function(){
+  var header = new HashMap();
+  header.put("Authorization", "Bearer " + items["Honeywell_AccessToken"]);
+  return header;
+};
+
+/*
+ * This function checks the return from the HTTP GET or HTTP POST command and 
+ * if it’s unauthorized it implements the actual refresh of the auth token and second attempt to call the API.
+ **/
+var httpRequest = function(call){
+  var results = call(buildBearerHeader());
+  logger.debug("Results from HTTP call:\n"+results);
+
+  var unauthTest = /.*Unauthorized.*/;
+  if(unauthTest.test(results)){
+
+    if(requestAuthToken()){
+      results = call(buildBearerHeader());
+      logger.debug("Results from second HTTP call:\n"+results);
+
+      if(unauthTest.test(results)){
+        logger.error("Still unauthorized after second call");
+        results = null;
+      }
+    }
+    else {
+      logger.error("Failed to request a new auth token");
+      results = null;
+    }
+  }
+  return results;
+};
+
+/*
+ * This function is called by rules to make an HTTP GET request.
+ **/
+var makeRequest = function(url){
+  return httpRequest(function(header){ return HTTP.sendHttpGetRequest(url, header, 15000); });
+};
+
+/*
+ * This function is used to send commands to the API through POST requests.
+ **/
+var makePost = function(url, payload){
+  return httpRequest(function(header) { return HTTP.sendHttpPostRequest(url,
+                                                    "application/json",
+                                                     payload,
+                                                     header,
+                                                     15000); });
+};
